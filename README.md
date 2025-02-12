@@ -60,9 +60,10 @@ Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for detailed guidelines o
 
 ## Contact
 
-*   [Your Name/Team Name]
-*   [Your Email/Contact Information]
+*   Mohammed Jabir Hussain
+*   mohjabir07@gmail.com
+*   https://www.linkedin.com/in/mohammed-jabir-hussain-05369b218/
 
-## Acknowledgements (Optional)
+## Acknowledgements
 
 *   Thank anyone who has helped with the project.
