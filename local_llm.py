@@ -1,3 +1,4 @@
+#downloading deepseek model
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 class DeepSeekWrapper:
