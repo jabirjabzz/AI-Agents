@@ -1,3 +1,4 @@
+#downloading deepseek model
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
@@ -9,7 +10,7 @@ class DeepSeekWrapper:
             torch_dtype=torch.float16,
             device_map="auto"
         )
-        
+
     def generate_task(self, user_input):
         prompt = f"User: {user_input}\nAssistant: The browser task should be:"
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
