@@ -1,26 +1,41 @@
-#downloading deepseek model
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 import torch
 
 class DeepSeekWrapper:
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/deepseek-llm-1.3b-distilled")
+        model_name = "microsoft/phi-3-mini-4k-instruct"
+        
+        # 4-bit quantization for low memory usage
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=torch.float16
+        )
+
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_name,
+            trust_remote_code=True
+        )
+        
         self.model = AutoModelForCausalLM.from_pretrained(
-            "deepseek-ai/deepseek-llm-1.3b-distilled",
+            model_name,
+            device_map="auto",
             torch_dtype=torch.float16,
-            device_map="auto"
+            trust_remote_code=True,
+            quantization_config=quantization_config
         )
 
     def generate_task(self, user_input):
-        prompt = f"User: {user_input}\nAssistant: The browser task should be:"
+        prompt = f"""<|user|>
+        Create a browser automation task for: {user_input}
+        <|assistant|>"""
+        
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
         
-        with torch.no_grad():
-            outputs = self.model.generate(
-                **inputs,
-                max_new_tokens=100,
-                temperature=0.7,
-                do_sample=True
-            )
-            
+        outputs = self.model.generate(
+            inputs.input_ids,
+            max_new_tokens=200,
+            temperature=0.7,
+            do_sample=True
+        )
+        
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
